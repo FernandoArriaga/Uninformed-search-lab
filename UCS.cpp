@@ -6,7 +6,7 @@
 #include <queue>
 #include <stack>
 #include<list>
-
+bool flag;
 class statenode {
 public:
 int pathcost;
@@ -28,17 +28,33 @@ unsigned int hn(statenode*)
     return 0;
 }
 
+statenode* shift(statenode* node, int start, int finish)
+{
+statenode* next=new statenode;
+for(unsigned int i=0; i<node->stacks.size();i++)
+{
+next->stacks.push_back(node->stacks[i]);
+}
+next->stacks[finish].push(next->stacks[start].top());
+next->stacks[start].pop();
+next->parent=node;
+next->Nstart=start;
+next->Nfinish=finish;
+next->cpc();
+return next;
+}
+
 class UCS {
     public:
-int height;
-unsigned int lowestpathcost;
+unsigned int height;
 statenode* Instate;
 statenode* Goalstate;
 std::vector<statenode*> Pqueue;
 
 statenode* fn(void)
 {
-    int j;
+unsigned int lowestpathcost=4294967295;;
+    int j=0;
     statenode* temp;
  for (unsigned int i=0;i<Pqueue.size();i++)
  {
@@ -55,6 +71,19 @@ statenode* fn(void)
 
 void expand (statenode* p)
 {
+    statenode* bfer;
+for(unsigned int s=0;s < p->stacks.size();s++)
+{
+    for(unsigned int f=0;f < p->stacks.size();f++)
+    {
+        if (!(p->stacks[s].empty())&&(p->stacks[f].size() < this->height)&&(f!=s))
+        {
+
+            bfer=shift(p,s,f);
+            this->Pqueue.push_back(bfer);
+        }
+    }
+}
 
 }
 
@@ -62,7 +91,7 @@ friend class statenode;
 };
 
 
-statenode* initialize(std::string buffer){
+statenode* initialize(std::string buffer, unsigned int maxs){
 statenode* temp=new statenode;
 std::stack<char> sbuffer;
 int j=0;
@@ -75,6 +104,11 @@ for(unsigned int i=0;i<buffer.length();i++)
 
     if(buffer[i]==';')
     {
+    if(sbuffer.size()>maxs)
+    {
+        flag=1;
+        return temp;
+    }
     temp->stacks.push_back(sbuffer);
     j++;
         while(!sbuffer.empty())
@@ -83,7 +117,13 @@ for(unsigned int i=0;i<buffer.length();i++)
         }
     }
 }
+if(sbuffer.size()>maxs)
+    {
+        flag=1;
+        return temp;
+    }
 temp->stacks.push_back(sbuffer);
+
 temp->parent=0;
 temp->Nstart=0;
 temp->Nfinish=0;
@@ -91,23 +131,6 @@ temp->pathcost=0;
 return temp;
 }
 
-
-statenode* shift(statenode* node, int start, int finish)
-{
-statenode* next=new statenode;
-for(unsigned int i=0; i<node->stacks.size();i++)
-{
-next->stacks.push_back(node->stacks[i]);
-}
-next->stacks[finish].push(next->stacks[start].top());
-next->stacks[start].pop();
-next->parent=node;
-next->Nstart=start;
-next->Nfinish=finish;
-next->cpc();
-std::cout<<next->stacks[start].top();
-return next;
-}
 
 bool comp (statenode* current, statenode* goal)
 {
@@ -128,6 +151,11 @@ bool comp (statenode* current, statenode* goal)
 
 void solution(statenode* temp)
 {
+    if (temp->parent==0)
+    {
+        std::cout<<"("<<temp->Nstart<<","<<temp->Nfinish<<")";
+        return;
+    }
     if (temp->parent->parent==0)
     {
         std::cout<<"("<<temp->Nstart<<","<<temp->Nfinish<<")";
@@ -141,7 +169,7 @@ void solution(statenode* temp)
 int main(int argc, char* argv[]) {
 std::stack<char> out;
 UCS SS;
-SS.lowestpathcost=4294967295;
+statenode* P;
 
 std::string line;
 std::vector<std::string> lines;
@@ -150,46 +178,28 @@ std::getline(std::cin,line);
 scanf("%d",&SS.height);
 
 std::getline(std::cin, line);
-SS.Instate=initialize(line);
+SS.Instate=initialize(line,SS.height);
 
 std::getline(std::cin, line);
 
-SS.Goalstate=initialize(line);
+SS.Goalstate=initialize(line,SS.height);
 SS.Goalstate->parent=SS.Instate;
-
+if (!flag)
+{
 SS.Pqueue.push_back(SS.Instate);
-
-
-if (comp(SS.Instate,SS.Goalstate))
-    std::cout<<"success"<<std::endl;
-else
-    std::cout<<"not the same"<<std::endl;
-
-std::cout<<SS.Goalstate->pathcost<<std::endl;
-solution(SS.Goalstate);
-
-std::cout<<SS.height<<std::endl;
-printf("\n");
-
-for(unsigned int i=0; i<SS.Instate->stacks.size();i++)
+P = SS.fn();
+while(!comp(P,SS.Goalstate))
 {
-while (!SS.Instate->stacks[i].empty())
-{
-std::cout<<SS.Instate->stacks[i].top()<<std::endl;
-SS.Instate->stacks[i].pop();
+    SS.expand(P);
+    P=SS.fn();
 }
-printf("\n");
+std::cout<<P->pathcost<<std::endl;
+solution(P);
+}
+else{
+    std::cout<<"No solution found"<<std::endl;
 }
 
-for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
-{
-while (!SS.Goalstate->stacks[i].empty())
-{
-std::cout<<SS.Goalstate->stacks[i].top()<<std::endl;
-SS.Goalstate->stacks[i].pop();
-}
-printf("\n");
-}
 
   return 0;
 }
