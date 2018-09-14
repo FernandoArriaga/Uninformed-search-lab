@@ -169,7 +169,7 @@ std::cout<<SS.Goalstate->pathcost<<std::endl;
 solution(SS.Goalstate);
 
 std::cout<<SS.height<<std::endl;
-printf("\n");*/
+printf("\n");
 
 for(unsigned int i=0; i<SS.Instate->stacks.size();i++)
 {
