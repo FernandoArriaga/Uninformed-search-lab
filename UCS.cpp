@@ -1,3 +1,4 @@
+#include<stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -12,7 +13,7 @@ int pathcost;
 int Nstart;
 int Nfinish;
 statenode* parent;
-std::vector<std::stack<char>> stacks;
+std::vector<std::stack<char> > stacks;
 //std::list<statenode*> children;
 void cpc(void)
 {
