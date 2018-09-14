@@ -168,10 +168,10 @@ else
 std::cout<<SS.Goalstate->pathcost<<std::endl;
 solution(SS.Goalstate);
 
-/*std::cout<<SS.height<<std::endl;
+std::cout<<SS.height<<std::endl;
 printf("\n");*/
 
-/*for(unsigned int i=0; i<SS.Instate->stacks.size();i++)
+for(unsigned int i=0; i<SS.Instate->stacks.size();i++)
 {
 while (!SS.Instate->stacks[i].empty())
 {
@@ -179,9 +179,9 @@ std::cout<<SS.Instate->stacks[i].top()<<std::endl;
 SS.Instate->stacks[i].pop();
 }
 printf("\n");
-}*/
+}
 
-/*for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
+for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
 {
 while (!SS.Goalstate->stacks[i].empty())
 {
@@ -189,7 +189,7 @@ std::cout<<SS.Goalstate->stacks[i].top()<<std::endl;
 SS.Goalstate->stacks[i].pop();
 }
 printf("\n");
-}*/
+}
 
   return 0;
 }
