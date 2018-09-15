@@ -10,8 +10,8 @@ bool flag;
 class statenode {
 public:
 int pathcost;
-int Nstart;
-int Nfinish;
+unsigned int Nstart;
+unsigned int Nfinish;
 statenode* parent;
 std::vector<std::stack<char> > stacks;
 //std::list<statenode*> children;
@@ -117,7 +117,7 @@ statenode* fn(void)
 unsigned int lowestpathcost=4294967295;;
     int j=0;
     statenode* temp;
-    int pcost;
+    unsigned int pcost;
 
  for (unsigned int i=0;i<Pqueue.size();i++)
  {
@@ -157,7 +157,7 @@ for(unsigned int s=0;s < p->stacks.size();s++)
 {
     for(unsigned int f=0;f < p->stacks.size();f++)
     {
-        if (!(p->stacks[s].empty())&&(p->stacks[f].size() < this->height)&&(f!=s))
+        if (!(p->stacks[s].empty())&&(p->stacks[f].size() < this->height)&&(f!=s)&&(s!=p->Nfinish))
         {
 
             bfer=shift(p,s,f);
@@ -268,6 +268,26 @@ while(!comp(P,SS.Goalstate))
 }
 if (!flag)
 {
+    for(unsigned int i=0; i<P->stacks.size();i++)
+{
+while (!(P->stacks[i].empty()))
+{
+std::cout<<P->stacks[i].top()<<"pop"<<std::endl;
+P->stacks[i].pop();
+}
+printf("\n");
+}
+
+ for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
+{
+while (!(SS.Goalstate->stacks[i].empty()))
+{
+std::cout<<SS.Goalstate->stacks[i].top()<<"pop"<<std::endl;
+SS.Goalstate->stacks[i].pop();
+}
+printf("\n");
+}
+
 std::cout<<P->pathcost<<std::endl;
 solution(P);
 }
