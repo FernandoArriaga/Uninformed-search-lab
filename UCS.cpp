@@ -14,6 +14,7 @@ int Nstart;
 int Nfinish;
 statenode* parent;
 std::vector<std::stack<char> > stacks;
+//std::list<statenode*> children;
 void cpc(void)
 {
     this->pathcost=(parent->pathcost)+1+abs(Nstart-Nfinish);
@@ -168,8 +169,16 @@ goal.stacks.push_back(gs->stacks[i]);
         }
 
         }
-        if((current.stacks[i].empty()!=goal.stacks[i].empty())&&(!(goal.stacks[i].top()=='X'||goal.stacks[i].top()=='x')))
+        if((current.stacks[i].empty()!=goal.stacks[i].empty()))
+            {
+            if(!goal.stacks[i].empty())
+            {
+                if((!(goal.stacks[i].top()=='X'||goal.stacks[i].top()=='x')))
             return false;
+            }
+            }
+
+
     }
     return true;
 }
@@ -233,11 +242,3 @@ else{
 
   return 0;
 }
-/*for(unsigned int i=0; i<P->stacks.size();i++)
-{
-while (!(P->stacks[i].empty()))
-{
-std::cout<<P->stacks[i].top()<<"pop"<<std::endl;
-P->stacks[i].pop();
-}
-}*/
