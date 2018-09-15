@@ -23,7 +23,7 @@ void cpc(void)
 friend class UCS;
 };
 
-unsigned int hn(statenode* p)
+unsigned int hn(statenode* p, statenode* goal)
 {
     return 0;
 }
@@ -31,7 +31,7 @@ unsigned int hn(statenode* p)
 
 bool comp (statenode* curr, statenode* gs)
 {
-    statenode current;
+statenode current;
     statenode goal;
     for(unsigned int i=0; i < curr->stacks.size(); i++)
 {
@@ -73,12 +73,19 @@ goal.stacks.push_back(gs->stacks[i]);
                 if((!(goal.stacks[i].top()=='X'||goal.stacks[i].top()=='x')))
             return false;
             }
+            else
+                return false;
             }
 
 
     }
     return true;
 }
+
+
+
+
+
 
 statenode* shift(statenode* node, int start, int finish)
 {
@@ -110,14 +117,22 @@ statenode* fn(void)
 unsigned int lowestpathcost=4294967295;;
     int j=0;
     statenode* temp;
+    int pcost;
+
  for (unsigned int i=0;i<Pqueue.size();i++)
  {
-     if(((Pqueue[i]->pathcost)+hn(Pqueue[i]))<lowestpathcost)
+     pcost=(Pqueue[i]->pathcost)+hn(Pqueue[i],this->Goalstate);
+     if(pcost<lowestpathcost)
      {
-         lowestpathcost=((Pqueue[i]->pathcost)+hn(Pqueue[i]));
+         lowestpathcost=pcost;
          temp=Pqueue[i];
          j=i;
      }
+ }
+ if(Pqueue.empty())
+ {
+     flag=1;
+     return temp;
  }
  Pqueue.erase(Pqueue.begin()+j);
  Visited.push_back(temp);
@@ -129,7 +144,8 @@ bool visit (statenode* p)
     for (unsigned int i =0;i < Visited.size();i++)
     {
         if (comp(Visited[i],p))
-            return true;
+        {
+            return true;}
     }
     return false;
 }
@@ -238,6 +254,7 @@ std::getline(std::cin, line);
 
 SS.Goalstate=initialize(line,SS.height);
 SS.Goalstate->parent=SS.Instate;
+
 if (!flag)
 {
 SS.Pqueue.push_back(SS.Instate);
@@ -246,12 +263,36 @@ while(!comp(P,SS.Goalstate))
 {
     SS.expand(P);
     P=SS.fn();
+    if (flag)
+        break;
+}
+if (!flag)
+{
+    for(unsigned int i=0; i<P->stacks.size();i++)
+{
+while (!(P->stacks[i].empty()))
+{
+std::cout<<P->stacks[i].top()<<"pop"<<std::endl;
+P->stacks[i].pop();
+}
+printf("\n");
+}
+
+ for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
+{
+while (!(SS.Goalstate->stacks[i].empty()))
+{
+std::cout<<SS.Goalstate->stacks[i].top()<<"pop"<<std::endl;
+SS.Goalstate->stacks[i].pop();
+}
+printf("\n");
 }
 
 std::cout<<P->pathcost<<std::endl;
 solution(P);
 }
-else{
+}
+if (flag){
     std::cout<<"No solution found"<<std::endl;
 }
 
