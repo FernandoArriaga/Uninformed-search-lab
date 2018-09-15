@@ -80,6 +80,13 @@ goal.stacks[i].pop();
             tempg[i].pop();
 
         }
+        else
+            break;
+        }
+        if(!tempg[i].empty())
+        {
+        if(!(tempg[i].top()=='X'||tempg[i].top()=='x'))
+        h+=(abs(tempc[i].size()-tempg[i].size()));
         }
         h+=(abs(tempc[i].size()-tempg[i].size()));
     }
@@ -327,25 +334,6 @@ while(!comp(P,SS.Goalstate))
 }
 if (!flag)
 {
-    for(unsigned int i=0; i<P->stacks.size();i++)
-{
-while (!(P->stacks[i].empty()))
-{
-std::cout<<P->stacks[i].top()<<"pop"<<std::endl;
-P->stacks[i].pop();
-}
-printf("\n");
-}
-
- for(unsigned int i=0; i<SS.Goalstate->stacks.size();i++)
-{
-while (!(SS.Goalstate->stacks[i].empty()))
-{
-std::cout<<SS.Goalstate->stacks[i].top()<<"pop"<<std::endl;
-SS.Goalstate->stacks[i].pop();
-}
-printf("\n");
-}
 
 std::cout<<P->pathcost<<std::endl;
 solution(P);
