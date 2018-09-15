@@ -132,18 +132,44 @@ return temp;
 }
 
 
-bool comp (statenode* current, statenode* goal)
+bool comp (statenode* curr, statenode* gs)
 {
-    for (unsigned int i=0; i<current->stacks.size();i++)
+    statenode current;
+    statenode goal;
+    for(unsigned int i=0; i < curr->stacks.size(); i++)
+{
+current.stacks.push_back(curr->stacks[i]);
+}
+ for(unsigned int i=0; i < gs->stacks.size(); i++)
+{
+goal.stacks.push_back(gs->stacks[i]);
+}
+
+
+    for (unsigned int i=0; i<current.stacks.size();i++)
     {
-        while (!current->stacks[i].empty()&&!goal->stacks[i].empty())
+
+
+        while (!current.stacks[i].empty()&&!goal.stacks[i].empty())
         {
-            if (current->stacks[i].top()!=goal->stacks[i].top())
+         if(!(goal.stacks[i].top()=='X'||goal.stacks[i].top()=='x'))
+         {
+            if (current.stacks[i].top()!=goal.stacks[i].top())
                 return false;
-            current->stacks[i].pop();
-            goal->stacks[i].pop();
+
+            current.stacks[i].pop();
+
+            goal.stacks[i].pop();
+
         }
-        if(current->stacks[i].empty()!=goal->stacks[i].empty())
+        else
+        {
+
+            break;
+        }
+
+        }
+        if((current.stacks[i].empty()!=goal.stacks[i].empty())&&(!(goal.stacks[i].top()=='X'||goal.stacks[i].top()=='x')))
             return false;
     }
     return true;
@@ -153,18 +179,22 @@ void solution(statenode* temp)
 {
     if (temp->parent==0)
     {
-        std::cout<<"("<<temp->Nstart<<","<<temp->Nfinish<<")";
+        std::cout<<"("<<temp->Nstart<<", "<<temp->Nfinish<<")";
         return;
     }
     if (temp->parent->parent==0)
     {
-        std::cout<<"("<<temp->Nstart<<","<<temp->Nfinish<<")";
+        std::cout<<"("<<temp->Nstart<<", "<<temp->Nfinish<<")";
+
         return;
     }
     solution(temp->parent);
-    std::cout<<";"<<"("<<temp->Nstart<<","<<temp->Nfinish<<")";
+
+    std::cout<<"; "<<"("<<temp->Nstart<<", "<<temp->Nfinish<<")";
+
     return;
 }
+
 
 int main(int argc, char* argv[]) {
 std::stack<char> out;
@@ -193,6 +223,7 @@ while(!comp(P,SS.Goalstate))
     SS.expand(P);
     P=SS.fn();
 }
+
 std::cout<<P->pathcost<<std::endl;
 solution(P);
 }
@@ -203,3 +234,11 @@ else{
 
   return 0;
 }
+/*for(unsigned int i=0; i<P->stacks.size();i++)
+{
+while (!(P->stacks[i].empty()))
+{
+std::cout<<P->stacks[i].top()<<"pop"<<std::endl;
+P->stacks[i].pop();
+}
+}*/
